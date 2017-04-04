@@ -159,6 +159,7 @@ RhythmArena.SnakeGame.prototype = {
         yPos = 0;
         music.stop();
         that.state.restart();
+        that.state.start('SnakeEnd', true, false, Number(that.scoreboard.text).toString());
         // that.state.start('MainMenu');
     },
     // eats: function(direction) {

@@ -7,5 +7,6 @@ RhythmArena.game.state.add('Preload', RhythmArena.Preload);
 RhythmArena.game.state.add('MainMenu', RhythmArena.MainMenu);
 RhythmArena.game.state.add('MainGame', RhythmArena.MainGame);
 RhythmArena.game.state.add('SnakeGame', RhythmArena.SnakeGame);
+RhythmArena.game.state.add('SnakeEnd', RhythmArena.SnakeEnd);
 
 RhythmArena.game.state.start('Boot');

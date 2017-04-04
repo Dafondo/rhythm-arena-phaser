@@ -11,9 +11,10 @@ RhythmArena.MainMenu.prototype = {
         if(music.isDecoded) this.game.state.start('MainGame');
     },
     startSnake: function() {
-        if(music.isDecoded) this.game.state.start('SnakeGame');
+        if(music.isDecoded) this.game.state.start('SnakeGame', true, false);
     },
     create: function() {
+        this.stage.backgroundColor = '#ffffff';
         this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'canoe-bear');
 
         this.background.autoScroll(-20, 0);
