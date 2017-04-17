@@ -15,7 +15,9 @@ RhythmArena.MainMenu.prototype = {
     },
     create: function() {
         this.stage.backgroundColor = '#ffffff';
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'canoe-bear');
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'grass');
+        this.background.smoothed = false;
+        /*this.background.scale.setTo(4);*/
 
         this.background.autoScroll(-20, 0);
 

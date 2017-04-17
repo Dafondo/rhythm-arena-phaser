@@ -55,9 +55,13 @@ RhythmArena.MainGame.prototype = {
     wasd: null,
     turnLeft: function(player) {
         player.direction = this.posMod(player.direction - 1, 4);
+        if(player.direction == 1) player.sprite.scale.x = this.spriteScale;
+        else if(player.direction == 3) player.sprite.scale.x = -1 * this.spriteScale;
     },
     turnRight: function(player) {
         player.direction = this.posMod(player.direction + 1, 4);
+        if(player.direction == 1) player.sprite.scale.x = this.spriteScale;
+        else if(player.direction == 3) player.sprite.scale.x = -1 * this.spriteScale;
     },
     create: function() {
         this.stage.backgroundColor = '#182d3b';
@@ -80,7 +84,7 @@ RhythmArena.MainGame.prototype = {
                 s = this.add.sprite(x, y, 'grass');
                 /*s = this.add.sprite(j*this.spriteSize*this.spriteScale, i*this.spriteSize*this.spriteScale, 'grass');*/
                 s.scale.setTo(this.spriteScale);
-                s.anchor.setTo(0, 0);
+                s.anchor.setTo(0.5, 0.5);
                 s.smoothed = false;
             }
         }
@@ -92,7 +96,7 @@ RhythmArena.MainGame.prototype = {
         this.players.p1.xPos = 0;
         this.players.p1.yPos = 0;
         this.players.p1.sprite.scale.setTo(this.spriteScale);
-        this.players.p1.sprite.anchor.setTo(0, 0);
+        this.players.p1.sprite.anchor.setTo(0.5, 0.5);
         this.players.p1.sprite.smoothed = false;
 
         /*this.players.p2.sprite = this.add.sprite(this.spriteSize*9*this.spriteScale, this.spriteSize*9*this.spriteScale, 'player');*/
@@ -100,7 +104,8 @@ RhythmArena.MainGame.prototype = {
         sy = this.world.height/2 + (9 - this.map.length/2)*this.spriteSize*this.spriteScale;
         this.players.p2.sprite = this.add.sprite(sx, sy, 'player');
         this.players.p2.sprite.scale.setTo(this.spriteScale);
-        this.players.p2.sprite.anchor.setTo(0, 0);
+        this.players.p2.sprite.scale.x *= -1;
+        this.players.p2.sprite.anchor.setTo(0.5, 0.5);
         this.players.p2.sprite.smoothed = false;
 
         /*this.world.setBounds(0, 0, this.spriteSize*10*this.spriteScale, this.spriteSize*10*this.spriteScale);*/
@@ -123,8 +128,6 @@ RhythmArena.MainGame.prototype = {
             left: this.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(function(){this.turnLeft(this.players.p2)}, this),
             right: this.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(function(){this.turnRight(this.players.p2)}, this)
         }
-
-
 
         this.camera.setSize(this.spriteSize*10, this.spriteSize*10);
         this.camera.setPosition(0, 0);
@@ -161,7 +164,6 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 270);*/
 
             desty -= this.spriteSize * this.spriteScale;
-            /*this.physics.arcade.moveToXY(player.sprite, x, y, 120, this.halfBeat);*/
 
             player.yPos--;
         }
@@ -172,7 +174,6 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 0);*/
 
             destx += this.spriteSize * this.spriteScale;
-            /*this.physics.arcade.moveToXY(player.sprite, x, y, 120, this.halfBeat);*/
 
             player.xPos++;
         }
@@ -183,7 +184,6 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 90);*/
 
             desty += this.spriteSize * this.spriteScale;
-            /*this.physics.arcade.moveToXY(player.sprite, x, y, 120, this.halfBeat);*/
 
             player.yPos++;
         }
@@ -194,7 +194,6 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 180);*/
 
             destx -= this.spriteSize * this.spriteScale;
-            /*this.physics.arcade.moveToXY(player.sprite, x, y, 120, this.halfBeat);*/
 
             player.xPos--;
         }
