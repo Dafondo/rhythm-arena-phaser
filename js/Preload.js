@@ -3,6 +3,8 @@ var RhythmArena = RhythmArena || {};
 RhythmArena.Preload = function(){};
 
 RhythmArena.Preload.prototype = {
+    /*init: function() {    
+    },*/
     preload: function() {
         this.splash = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
         this.splash.anchor.setTo(0.5);

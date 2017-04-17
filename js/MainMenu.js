@@ -1,13 +1,13 @@
 var RhythmArena = RhythmArena || {};
 
 RhythmArena.MainMenu = function(){};
-
-var music;
-
+var music
 RhythmArena.MainMenu.prototype = {
+    music: null,
     gameButton: null,
     snakeButton: null,
     startGame: function() {
+        /*this.game.state.start('MainGame');*/
         if(music.isDecoded) this.game.state.start('MainGame');
     },
     startSnake: function() {
@@ -36,7 +36,6 @@ RhythmArena.MainMenu.prototype = {
         // t.strokeThickness = 6;
     },
     update: function() {
-
         // if(this.game.input.activePointer.justPressed()) {
         //     if(music.isDecoded) this.game.state.start('SnakeGame');
         // }
