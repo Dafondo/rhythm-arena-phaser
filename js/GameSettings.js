@@ -7,6 +7,6 @@ RhythmArena.GameSettings.prototype = {
 
     },
     create: function() {
-
+        
     }
 }

@@ -4,15 +4,27 @@ RhythmArena.MainGame = function(){};
 var tween;
 
 RhythmArena.MainGame.prototype = {
+    // map: [
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    // ],
     map: [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1, 0, 0, 0, 1, 1],
+        [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+        [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
@@ -21,6 +33,7 @@ RhythmArena.MainGame.prototype = {
     players: {
         p1: {
             sprite: null,
+            dirSprite: null,
             direction: 1,
             xPos: 0,
             yPos: 0,
@@ -29,10 +42,13 @@ RhythmArena.MainGame.prototype = {
                 right: null
             },
             canMove: true,
-            tween: null
+            isMoving: false,
+            tween: null,
+            dirTween: null
         },
         p2: {
             sprite: null,
+            dirSprite: null,
             direction: 3,
             xPos: 9,
             yPos: 9,
@@ -41,7 +57,9 @@ RhythmArena.MainGame.prototype = {
                 right: null
             },
             canMove: true,
-            tween: null
+            isMoving: false,
+            tween: null,
+            dirTween: null
         }
     },
     music: {
@@ -53,15 +71,45 @@ RhythmArena.MainGame.prototype = {
     },
     cursors: null,
     wasd: null,
-    turnLeft: function(player) {
-        player.direction = this.posMod(player.direction - 1, 4);
-        if(player.direction == 1) player.sprite.scale.x = this.spriteScale;
-        else if(player.direction == 3) player.sprite.scale.x = -1 * this.spriteScale;
+    turnArrow: function(player) {
+        // if(!player.isMoving) {
+            switch(player.direction) {
+                case 0:
+                    // player.dirSprite.x = player.sprite.x;
+                    // player.dirSprite.y = player.sprite.y - this.spriteSize * this.spriteScale;
+                    player.dirSprite.angle = 270;
+                    break;
+                case 1:
+                    // player.dirSprite.x = player.sprite.x + this.spriteSize * this.spriteScale;
+                    // player.dirSprite.y = player.sprite.y;
+                    player.dirSprite.angle = 0;
+                    break;
+                case 2:
+                    // player.dirSprite.x = player.sprite.x;
+                    // player.dirSprite.y = player.sprite.y + this.spriteSize * this.spriteScale;
+                    player.dirSprite.angle = 90;
+                    break;
+                case 3:
+                    // player.dirSprite.x = player.sprite.x - this.spriteSize * this.spriteScale;
+                    // player.dirSprite.y = player.sprite.y;
+                    player.dirSprite.angle = 180;
+                    break;
+            }
+        // }
     },
-    turnRight: function(player) {
-        player.direction = this.posMod(player.direction + 1, 4);
-        if(player.direction == 1) player.sprite.scale.x = this.spriteScale;
-        else if(player.direction == 3) player.sprite.scale.x = -1 * this.spriteScale;
+    turn: function(player, dir) {
+        // if(!player.isMoving) {
+            if(dir === 0) {
+                player.direction = this.posMod(player.direction - 1, 4);
+            }
+            else {
+                player.direction = this.posMod(player.direction + 1, 4);
+            }
+            this.turnArrow(player);
+            if(player.direction == 1) player.sprite.scale.x = this.spriteScale;
+            else if(player.direction == 3) player.sprite.scale.x = -1 * this.spriteScale;
+        // }
+        // this.turnArrow(player);
     },
     create: function() {
         this.stage.backgroundColor = '#182d3b';
@@ -81,10 +129,17 @@ RhythmArena.MainGame.prototype = {
             for(var j = 0; j < this.map[i].length; j++) {
                 x = this.world.width/2 + (j - this.map[i].length/2)*this.spriteSize*this.spriteScale;
                 y = this.world.height/2 + (i - this.map.length/2)*this.spriteSize*this.spriteScale;
-                s = this.add.sprite(x, y, 'grass');
+                var s;
+                if(this.map[i][j] === 0) {
+                    s = this.add.sprite(x, y, 'block');
+                    s.anchor.setTo(0.5, 36/52);
+                }
+                else if (this.map[i][j] === 1) {
+                    s = this.add.sprite(x, y, 'grass');
+                    s.anchor.setTo(0.5, 0.5);
+                }
                 /*s = this.add.sprite(j*this.spriteSize*this.spriteScale, i*this.spriteSize*this.spriteScale, 'grass');*/
                 s.scale.setTo(this.spriteScale);
-                s.anchor.setTo(0.5, 0.5);
                 s.smoothed = false;
             }
         }
@@ -99,6 +154,13 @@ RhythmArena.MainGame.prototype = {
         this.players.p1.sprite.anchor.setTo(0.5, 0.5);
         this.players.p1.sprite.smoothed = false;
 
+        this.players.p1.dirSprite = this.add.sprite(sx, sy, 'arrow');
+        this.players.p1.dirSprite.tint = Math.random() * 0xffffff;
+        this.players.p1.dirSprite.scale.setTo(this.spriteScale);
+        this.players.p1.dirSprite.anchor.setTo(-0.5, 0.5);
+        this.players.p1.dirSprite.smoothed = false;
+        this.turnArrow(this.players.p1);
+
         /*this.players.p2.sprite = this.add.sprite(this.spriteSize*9*this.spriteScale, this.spriteSize*9*this.spriteScale, 'player');*/
         sx = this.world.width/2 + (9 - this.map[9].length/2)*this.spriteSize*this.spriteScale;
         sy = this.world.height/2 + (9 - this.map.length/2)*this.spriteSize*this.spriteScale;
@@ -107,6 +169,13 @@ RhythmArena.MainGame.prototype = {
         this.players.p2.sprite.scale.x *= -1;
         this.players.p2.sprite.anchor.setTo(0.5, 0.5);
         this.players.p2.sprite.smoothed = false;
+
+        this.players.p2.dirSprite = this.add.sprite(sx, sy, 'arrow');
+        this.players.p2.dirSprite.tint = Math.random() * 0xffffff;
+        this.players.p2.dirSprite.scale.setTo(this.spriteScale);
+        this.players.p2.dirSprite.anchor.setTo(-0.5, 0.5);
+        this.players.p2.dirSprite.smoothed = false;
+        this.turnArrow(this.players.p2);
 
         /*this.world.setBounds(0, 0, this.spriteSize*10*this.spriteScale, this.spriteSize*10*this.spriteScale);*/
         this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -121,12 +190,12 @@ RhythmArena.MainGame.prototype = {
             d: this.input.keyboard.addKey(Phaser.Keyboard.D)
         }*/
         this.players.p1.controls = {
-            left: this.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(function(){this.turnLeft(this.players.p1)}, this),
-            right: this.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(function(){this.turnRight(this.players.p1)}, this)
+            left: this.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(function(){this.turn(this.players.p1, 0)}, this),
+            right: this.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(function(){this.turn(this.players.p1, 1)}, this)
         }
         this.players.p2.controls = {
-            left: this.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(function(){this.turnLeft(this.players.p2)}, this),
-            right: this.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(function(){this.turnRight(this.players.p2)}, this)
+            left: this.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(function(){this.turn(this.players.p2, 0)}, this),
+            right: this.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(function(){this.turn(this.players.p2, 1)}, this)
         }
 
         this.camera.setSize(this.spriteSize*10, this.spriteSize*10);
@@ -140,23 +209,28 @@ RhythmArena.MainGame.prototype = {
         /*console.log(a, " mod ", n);*/
         return ((a%n)+n)%n;
     },
-    turn: function(player) {
-        if(player.canMove) {
-            if(player.controls.left.isDown) {
-                /*console.log("left");*/
-                player.direction = this.posMod(player.direction - 1, 4);
-                player.canMove = false;
-            }
-            else if(player.controls.right.isDown) {
-                /*console.log("right");*/
-                player.direction = this.posMod(player.direction + 1, 4);
-                player.canMove = false;
-            }
-        }
+    // turn: function(player) {
+    //     if(player.canMove) {
+    //         if(player.controls.left.isDown) {
+    //             /*console.log("left");*/
+    //             player.direction = this.posMod(player.direction - 1, 4);
+    //             player.canMove = false;
+    //         }
+    //         else if(player.controls.right.isDown) {
+    //             /*console.log("right");*/
+    //             player.direction = this.posMod(player.direction + 1, 4);
+    //             player.canMove = false;
+    //         }
+    //     }
+    // },
+    finishMoving: function(player) {
+        player.isMoving = false;
     },
     move: function(player) {
         var destx = player.sprite.x;
         var desty = player.sprite.y;
+        var dirx = player.dirSprite.x;
+        var diry = player.dirSprite.y;
         if(player.direction == 0) {
             /*player.sprite.y -= this.spriteSize*this.spriteScale;*/
 
@@ -164,7 +238,7 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 270);*/
 
             desty -= this.spriteSize * this.spriteScale;
-
+            diry -= this.spriteSize * this.spriteScale
             player.yPos--;
         }
         else if(player.direction == 1) {
@@ -174,7 +248,7 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 0);*/
 
             destx += this.spriteSize * this.spriteScale;
-
+            dirx += this.spriteSize * this.spriteScale;
             player.xPos++;
         }
         else if(player.direction == 2) {
@@ -184,7 +258,7 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 90);*/
 
             desty += this.spriteSize * this.spriteScale;
-
+            diry += this.spriteSize * this.spriteScale;
             player.yPos++;
         }
         else if(player.direction == 3) {
@@ -194,17 +268,22 @@ RhythmArena.MainGame.prototype = {
             player.sprite.body.moveTo(this.music.halfBeat, dest, 180);*/
 
             destx -= this.spriteSize * this.spriteScale;
-
+            dirx -= this.spriteSize * this.spriteScale;
             player.xPos--;
         }
-        player.tween = this.add.tween(player.sprite).to( { x: destx, y: desty }, 100);
+        player.tween = this.add.tween(player.sprite).to({ x: destx, y: desty }, this.music.halfBeat/2 < 100 ? this.music.halfBeat/2 : 100);
+        player.dirTween = this.add.tween(player.dirSprite).to({ x: dirx, y: diry }, this.music.halfBeat/2 < 100 ? this.music.halfBeat/2 : 100);
+        player.tween.onComplete.add(function() {this.finishMoving(player)}, this);
+        player.isMoving = true;
         player.tween.start();
+        player.dirTween.start();
     },
     validMove: function(player) {
-        if(player.direction == 0 && player.yPos > 0 && this.map[player.xPos][player.yPos - 1] == 1) return true;
-        else if(player.direction == 1 && player.xPos < 9 && this.map[player.xPos + 1][player.yPos] == 1) return true;
-        else if(player.direction == 2 && player.yPos < 9 && this.map[player.xPos][player.yPos + 1] == 1) return true;
-        else if(player.direction == 3 && player.xPos > 0 && this.map[player.xPos - 1][player.yPos] == 1) return true;
+        if(player.direction == 0 && player.yPos > 0 && this.map[player.yPos - 1][player.xPos] == 1) return true;
+        else if(player.direction == 1 && player.xPos < 9 && this.map[player.yPos][player.xPos + 1] == 1) return true;
+        else if(player.direction == 2 && player.yPos < 9 && this.map[player.yPos + 1][player.xPos] == 1) return true;
+        else if(player.direction == 3 && player.xPos > 0 && this.map[player.yPos][player.xPos - 1] == 1) return true;
+        // console.log("failed: x = ", player.xPos, ", y = ", player.yPos, ", block = ", this.map[player.xPos][player.yPos - 1]);
         return false;
     },
     update: function() {
