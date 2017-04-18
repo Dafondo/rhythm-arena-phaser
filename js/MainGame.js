@@ -28,6 +28,9 @@ RhythmArena.MainGame.prototype = {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
+    grassGroup: null,
+    depthGroup: null,
+    arrowGroup: null,
     spriteSize: 32,
     spriteScale: 2,
     players: {
@@ -112,7 +115,10 @@ RhythmArena.MainGame.prototype = {
         // this.turnArrow(player);
     },
     create: function() {
-        this.stage.backgroundColor = '#182d3b';
+        this.stage.backgroundColor = '#ffffff';
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starry');
+        this.background.smoothed = false;
+        this.background.autoScroll(-20, 0);
         this.input.touch.preventDefault = false;
 
         this.music.track = this.add.audio('80', 1, true);
@@ -123,20 +129,30 @@ RhythmArena.MainGame.prototype = {
 
         this.music.track.play();
 
-        this.camera.setSize(1, 1);
+        // this.camera.setSize(1, 1);
 
-        for(var i = 0; i < this.map.length; i++) {
-            for(var j = 0; j < this.map[i].length; j++) {
-                x = this.world.width/2 + (j - this.map[i].length/2)*this.spriteSize*this.spriteScale;
+        this.grassGroup = this.add.group();
+        this.depthGroup = this.add.group();
+        this.arrowGroup = this.add.group();
+
+        for(var i = -1; i <= this.map.length; i++) {
+            for(var j = -1; j <= this.map[0].length; j++) {
+                x = this.world.width/2 + (j - this.map[0].length/2)*this.spriteSize*this.spriteScale;
                 y = this.world.height/2 + (i - this.map.length/2)*this.spriteSize*this.spriteScale;
                 var s;
-                if(this.map[i][j] === 0) {
-                    s = this.add.sprite(x, y, 'block');
-                    s.anchor.setTo(0.5, 36/52);
+                if(i < 0 || i >= this.map.length || j < 0 || j >= this.map.length) {
+                    s = this.depthGroup.create(x, y, 'block'); //this.add.sprite(x, y, 'block');
+                    s.anchor.setTo(0.5, 38/52);
                 }
-                else if (this.map[i][j] === 1) {
-                    s = this.add.sprite(x, y, 'grass');
-                    s.anchor.setTo(0.5, 0.5);
+                else {
+                    if(this.map[i][j] === 0) {
+                        s = this.depthGroup.create(x, y, 'block'); //this.add.sprite(x, y, 'block');
+                        s.anchor.setTo(0.5, 38/52);
+                    }
+                    else if (this.map[i][j] === 1) {
+                        s = this.grassGroup.create(x, y, 'grass'); //this.add.sprite(x, y, 'grass');
+                        s.anchor.setTo(0.5, 0.5);
+                    }
                 }
                 /*s = this.add.sprite(j*this.spriteSize*this.spriteScale, i*this.spriteSize*this.spriteScale, 'grass');*/
                 s.scale.setTo(this.spriteScale);
@@ -147,14 +163,14 @@ RhythmArena.MainGame.prototype = {
         /*this.players.p1.sprite = this.add.sprite(0, 0, 'player');*/
         var sx = this.world.width/2 - this.map[0].length/2*this.spriteSize*this.spriteScale;
         var sy = this.world.height/2 - this.map.length/2*this.spriteSize*this.spriteScale;
-        this.players.p1.sprite = this.add.sprite(sx, sy, 'player');
+        this.players.p1.sprite = this.depthGroup.create(sx, sy, 'player'); //this.add.sprite(sx, sy, 'player');
         this.players.p1.xPos = 0;
         this.players.p1.yPos = 0;
         this.players.p1.sprite.scale.setTo(this.spriteScale);
         this.players.p1.sprite.anchor.setTo(0.5, 0.5);
         this.players.p1.sprite.smoothed = false;
 
-        this.players.p1.dirSprite = this.add.sprite(sx, sy, 'arrow');
+        this.players.p1.dirSprite = this.arrowGroup.create(sx, sy, 'arrow'); //this.add.sprite(sx, sy, 'arrow');
         this.players.p1.dirSprite.tint = Math.random() * 0xffffff;
         this.players.p1.dirSprite.scale.setTo(this.spriteScale);
         this.players.p1.dirSprite.anchor.setTo(-0.5, 0.5);
@@ -164,13 +180,13 @@ RhythmArena.MainGame.prototype = {
         /*this.players.p2.sprite = this.add.sprite(this.spriteSize*9*this.spriteScale, this.spriteSize*9*this.spriteScale, 'player');*/
         sx = this.world.width/2 + (9 - this.map[9].length/2)*this.spriteSize*this.spriteScale;
         sy = this.world.height/2 + (9 - this.map.length/2)*this.spriteSize*this.spriteScale;
-        this.players.p2.sprite = this.add.sprite(sx, sy, 'player');
+        this.players.p2.sprite = this.depthGroup.create(sx, sy, 'player'); //this.add.sprite(sx, sy, 'player');
         this.players.p2.sprite.scale.setTo(this.spriteScale);
         this.players.p2.sprite.scale.x *= -1;
         this.players.p2.sprite.anchor.setTo(0.5, 0.5);
         this.players.p2.sprite.smoothed = false;
 
-        this.players.p2.dirSprite = this.add.sprite(sx, sy, 'arrow');
+        this.players.p2.dirSprite = this.arrowGroup.create(sx, sy, 'arrow'); //this.add.sprite(sx, sy, 'arrow');
         this.players.p2.dirSprite.tint = Math.random() * 0xffffff;
         this.players.p2.dirSprite.scale.setTo(this.spriteScale);
         this.players.p2.dirSprite.anchor.setTo(-0.5, 0.5);
@@ -204,9 +220,12 @@ RhythmArena.MainGame.prototype = {
         //this.camera.focusOnXY(0, 0);
         //this.camera.follow(this.players.p1.sprite);
         this.camera.setBoundsToWorld();
+
+        this.world.bringToTop(this.depthGroup);
+        // this.world.bringToTop(this.arrowGroup);
+        this.depthGroup.sort();
     },
     posMod: function(a, n) {
-        /*console.log(a, " mod ", n);*/
         return ((a%n)+n)%n;
     },
     // turn: function(player) {
@@ -225,6 +244,7 @@ RhythmArena.MainGame.prototype = {
     // },
     finishMoving: function(player) {
         player.isMoving = false;
+        this.depthGroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
     move: function(player) {
         var destx = player.sprite.x;
@@ -309,6 +329,10 @@ RhythmArena.MainGame.prototype = {
             this.players.p2.canMove = true;*/
             // this.players.p1.sprite.x = Phaser.Math.snapTo(this.players.p1.sprite.x, this.spriteSize*this.spriteScale);
             // this.players.p1.sprite.y = Phaser.Math.snapTo(this.players.p1.sprite.y, this.spriteSize*this.spriteScale);
+        }
+
+        for (player in this.players) {
+            if(player.isMoving) this.depthGroup.sort('y', Phaser.Group.SORT_ASCENDING);
         }
     }
 }

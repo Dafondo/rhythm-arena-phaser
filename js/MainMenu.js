@@ -6,19 +6,21 @@ RhythmArena.MainMenu.prototype = {
     music: null,
     gameButton: null,
     snakeButton: null,
+    cursors: null,
     startGame: function() {
-        /*this.game.state.start('MainGame');*/
-        if(music.isDecoded) this.game.state.start('MainGame');
+        this.game.state.start('GameSettings');
+        // if(music.isDecoded) this.game.state.start('GameSettings');
     },
     startSnake: function() {
         if(music.isDecoded) this.game.state.start('SnakeGame', true, false);
     },
+    confirm() {
+        this.game.state.start('GameSettings');
+    },
     create: function() {
         this.stage.backgroundColor = '#ffffff';
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'grass');
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starry');
         this.background.smoothed = false;
-        /*this.background.scale.setTo(4);*/
-
         this.background.autoScroll(-20, 0);
 
         music = this.add.audio('80');
@@ -30,6 +32,10 @@ RhythmArena.MainMenu.prototype = {
 
         this.snakeButton = this.add.button(this.game.width/2, 400, 'logo', this.startSnake);
 
+        this.cursors = {
+            left: this.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(this.confirm, this),
+            right: this.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(this.confirm, this)
+        }
         // var text = "Click to begin";
         // var style = { font: "30px Arial", fill: "#fff", align: "center"};
         // var t = this.game.add.text(this.game.width/2, this.game.height/2, text, style);

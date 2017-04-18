@@ -3,8 +3,8 @@ var RhythmArena = RhythmArena || {};
 RhythmArena.Preload = function(){};
 
 RhythmArena.Preload.prototype = {
-    /*init: function() {
-    },*/
+    init: function() {
+    },
     preload: function() {
         this.splash = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
         this.splash.anchor.setTo(0.5);
@@ -20,6 +20,7 @@ RhythmArena.Preload.prototype = {
         this.load.image('arrow', 'assets/sprites/arrow.png');
         this.load.image('gobutton', 'assets/sprites/gobutton.png');
         this.load.image('canoe-bear', 'assets/sprites/canoe-bear.png');
+        this.load.image('starry', 'assets/sprites/starry.png');
         this.load.audio('80', 'assets/audio/80.mp3');
     },
     create: function() {

@@ -6,6 +6,7 @@ RhythmArena.Boot.prototype = {
     preload: function() {
         this.load.image('logo', 'assets/sprites/logo.png');
         this.load.image('preloadbar', 'assets/sprites/preloader-bar.png');
+        // this.load.image('starry', 'assets/sprites/starry.png');
     },
     create: function() {
         this.game.stage.backgroundColor = '#fff';
