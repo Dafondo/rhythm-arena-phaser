@@ -62,7 +62,7 @@ RhythmArena.Preload.prototype = {
         this.load.image('note', 'assets/sprites/note.png');
         this.load.audio('80', 'assets/audio/80.mp3');
         this.load.audio('Wepa', 'assets/audio/Wepa.mp3');
-        this.load.audio('MiamiViceroy', 'assets/audio/MiamiViceroy.mp3');
+        this.load.audio('MiamiViceroy', 'assets/audio/miamiviceroy.mp3');
         this.load.audio('LastKissGoodnight', 'assets/audio/LastKissGoodnight.mp3');
         this.load.audio('MaccaryBay', 'assets/audio/MaccaryBay.mp3');
         this.load.audio('SaltyDitty', 'assets/audio/SaltyDitty.mp3');
