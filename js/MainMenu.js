@@ -19,7 +19,7 @@ RhythmArena.MainMenu.prototype = {
     },
     create: function() {
         this.stage.backgroundColor = '#ffffff';
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starry');
+        this.background = this.game.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starry');
         this.background.smoothed = false;
         this.background.autoScroll(-20, 0);
 

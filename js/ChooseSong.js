@@ -6,7 +6,8 @@ RhythmArena.ChooseSong.prototype = {
     choices: null,
     songs: [
         {
-            name: 'Metronome: 80 bpm',
+            name: 'Metronome',
+            bpm: 80,
             callback: function() {
                 this.selectNext(0);
                 this.choices.songChoice = 0;
@@ -14,13 +15,69 @@ RhythmArena.ChooseSong.prototype = {
             }
         },
         {
-            name: 'other',
+            name: 'Summer Day',
+            bpm: 60,
             callback: function() {
                 this.selectNext(1);
                 this.choices.songChoice = 1;
                 this.selectChoice(1);
             }
-        }
+        },
+        {
+            name: 'Last Kiss Goodnight',
+            bpm: 60,
+            callback: function() {
+                this.selectNext(2);
+                this.choices.songChoice = 2;
+                this.selectChoice(2);
+            }
+        },
+        {
+            name: 'Maccary Bay',
+            bpm: 80,
+            callback: function() {
+                this.selectNext(3);
+                this.choices.songChoice = 3;
+                this.selectChoice(3);
+            }
+        },
+        {
+            name: 'Too Cool',
+            bpm: 80,
+            callback: function() {
+                this.selectNext(4);
+                this.choices.songChoice = 4;
+                this.selectChoice(4);
+            }
+        },
+        {
+            name: 'Salty Ditty',
+            bpm: 90,
+            callback: function() {
+                this.selectNext(5);
+                this.choices.songChoice = 5;
+                this.selectChoice(5);
+            }
+        },
+        {
+            name: 'Wepa',
+            bpm: 120,
+            callback: function() {
+                this.selectNext(6);
+                this.choices.songChoice = 6;
+                this.selectChoice(6);
+            }
+        },
+        {
+            name: 'Miami Viceroy',
+            bpm: 124,
+            callback: function() {
+                this.selectNext(7);
+                this.choices.songChoice = 7;
+                this.selectChoice(7);
+            }
+        },
+
     ],
     returnToPrev: function() {
         this.game.state.start('GameSettings', true, false, this.choices);
@@ -64,7 +121,7 @@ RhythmArena.ChooseSong.prototype = {
         this.menuGroup = this.add.group();
 
         for(var i = 0; i < this.songs.length; i++) {
-            var text = this.songs[i].name;
+            var text = this.songs[i].name + " (" + this.songs[i].bpm + " bpm)";
             var style = { font: "30px Arial", fill: "#fff", align: "center"};
             var t = this.game.add.text(this.game.width/2, this.game.height/(this.songs.length + 1) * (i + 1), text, style);
             t.anchor.set(0.5);

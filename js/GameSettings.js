@@ -1,7 +1,6 @@
 var RhythmArena = RhythmArena || {};
 
 RhythmArena.GameSettings = function(){};
-var music
 RhythmArena.GameSettings.prototype = {
     menuOptions: [
         {
@@ -23,10 +22,17 @@ RhythmArena.GameSettings.prototype = {
             }
         },
         {
+            name: 'Choose Rate',
+            callback: function() {
+                this.game.state.start('ChooseRate', true, false, this.choices);
+            }
+        },
+        {
             name: 'Start',
             callback: function() {
-                this.game.state.start('MainGame');
-                if(music.isDecoded) this.game.state.start('MainGame');
+                menuMusic.stop();
+                // this.game.state.start('MainGame', true, false, this.choices);
+                if(music.isDecoded) this.game.state.start('MainGame', true, false, this.choices);
             }
         }
     ],
