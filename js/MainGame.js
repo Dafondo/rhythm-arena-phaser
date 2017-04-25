@@ -23,6 +23,7 @@ RhythmArena.MainGame.prototype = {
         [9, 9, 3]
     ],
     grassGroup: null,
+    wallGroup: null,
     depthGroup: null,
     arrowGroup: null,
     spriteSize: 32,
@@ -90,6 +91,7 @@ RhythmArena.MainGame.prototype = {
     wasd: null,
     init: function(choices) {
         this.map = mapList[choices.mapChoice];
+        this.spawnPoints = spawnPointsList[choices.mapChoice];
         this.music.choice = choices.songChoice;
         this.music.rate = choices.bpmRate;
     },
@@ -145,6 +147,7 @@ RhythmArena.MainGame.prototype = {
         // this.players.p1.healthBar = this.add.group();
         // this.players.p2.healthBar = this.add.group();
         this.grassGroup = this.add.group();
+        this.wallGroup = this.add.group();
         this.depthGroup = this.add.group();
         this.arrowGroup = this.add.group();
 
@@ -156,11 +159,20 @@ RhythmArena.MainGame.prototype = {
                 if(i < 0 || i >= this.map.length || j < 0 || j >= this.map.length) {
                     s = this.depthGroup.create(x, y, 'block'); //this.add.sprite(x, y, 'block');
                     s.anchor.setTo(0.5, 38/52);
+                    c = this.wallGroup.create(x, y, 'grass');
+                    c.alpha = 0;
+                    c.anchor.setTo(0.5, 0.5);
+                    this.physics.enable(c);
                 }
                 else {
                     if(this.map[i][j] === 0) {
                         s = this.depthGroup.create(x, y, 'block'); //this.add.sprite(x, y, 'block');
+                        // this.wallGroup.add(s);
                         s.anchor.setTo(0.5, 38/52);
+                        c = this.wallGroup.create(x, y, 'grass');
+                        c.alpha = 0;
+                        c.anchor.setTo(0.5, 0.5);
+                        this.physics.enable(c);
                     }
                     else if (this.map[i][j] === 1) {
                         s = this.grassGroup.create(x, y, 'grass'); //this.add.sprite(x, y, 'grass');
@@ -175,11 +187,11 @@ RhythmArena.MainGame.prototype = {
 
 
         /*this.players.p1.sprite = this.add.sprite(0, 0, 'player');*/
-        var sx = this.world.width/2 - this.map[0].length/2*this.spriteSize*this.spriteScale;
-        var sy = this.world.height/2 - this.map.length/2*this.spriteSize*this.spriteScale;
+        sx = this.world.width/2 + (this.spawnPoints[0][0] - this.map[0].length/2)*this.spriteSize*this.spriteScale;
+        sy = this.world.height/2 + (this.spawnPoints[0][1] - this.map.length/2)*this.spriteSize*this.spriteScale;
         this.players.p1.sprite = this.depthGroup.create(sx, sy, 'player'); //this.add.sprite(sx, sy, 'player');
-        this.players.p1.xPos = 0;
-        this.players.p1.yPos = 0;
+        this.players.p1.xPos = this.spawnPoints[0][0];
+        this.players.p1.yPos = this.spawnPoints[0][1];
         this.players.p1.sprite.scale.setTo(this.spriteScale);
         this.players.p1.sprite.anchor.setTo(0.5, 0.5);
         this.players.p1.sprite.smoothed = false;
@@ -196,9 +208,11 @@ RhythmArena.MainGame.prototype = {
         // this.players.p1.sprite.addChild(this.players.p1.dirSprite);
 
         /*this.players.p2.sprite = this.add.sprite(this.spriteSize*9*this.spriteScale, this.spriteSize*9*this.spriteScale, 'player');*/
-        sx = this.world.width/2 + (9 - this.map[9].length/2)*this.spriteSize*this.spriteScale;
-        sy = this.world.height/2 + (9 - this.map.length/2)*this.spriteSize*this.spriteScale;
+        sx = this.world.width/2 + (this.spawnPoints[3][0] - this.map[0].length/2)*this.spriteSize*this.spriteScale;
+        sy = this.world.height/2 + (this.spawnPoints[3][1] - this.map.length/2)*this.spriteSize*this.spriteScale;
         this.players.p2.sprite = this.depthGroup.create(sx, sy, 'player'); //this.add.sprite(sx, sy, 'player');
+        this.players.p2.xPos = this.spawnPoints[3][0];
+        this.players.p2.yPos = this.spawnPoints[3][1];
         this.players.p2.sprite.scale.setTo(this.spriteScale);
         this.players.p2.sprite.scale.x *= -1;
         this.players.p2.sprite.anchor.setTo(0.5, 0.5);
@@ -237,6 +251,8 @@ RhythmArena.MainGame.prototype = {
         this.physics.enable(this.players.p2.sprite);
         this.physics.enable(this.players.p1.projectiles);
         this.physics.enable(this.players.p2.projectiles);
+        this.physics.enable(this.depthGroup);
+        this.physics.enable(this.wallGroup);
 
         this.players.p1.controls = {
             left: this.input.keyboard.addKey(Phaser.Keyboard.A).onDown.add(function(){this.turn(this.players.p1, 0)}, this),
@@ -268,14 +284,16 @@ RhythmArena.MainGame.prototype = {
         //this.camera.follow(this.players.p1.sprite);
         this.camera.setBoundsToWorld();
 
+        // this.world.bringToTop(this.wallGroup);
         this.world.bringToTop(this.depthGroup);
-        // this.world.bringToTop(this.arrowGroup);
+        this.world.bringToTop(this.arrowGroup);
         this.depthGroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
     posMod: function(a, n) {
         return ((a%n)+n)%n;
     },
     attack: function(player, dir) {
+        console.log("shoot");
         var note = player.projectiles.create(player.sprite.x, player.sprite.y, 'note');
         note.anchor.set(0.5, 0.5);
         note.scale.setTo(this.spriteScale);
@@ -391,6 +409,11 @@ RhythmArena.MainGame.prototype = {
         bullet.kill();
         player.damage(1);
     },
+    destroyProj: function(bullet, wall) {
+        if(wall != this.players.p1.sprite && wall != this.players.p2.sprite){
+            bullet.kill();
+        }
+    },
     update: function() {
 
         if(this.music.track.currentTime > this.music.lastBeat + this.music.beat) {
@@ -409,6 +432,8 @@ RhythmArena.MainGame.prototype = {
 
         this.physics.arcade.overlap(this.players.p1.projectiles, this.players.p2.sprite, this.damage, function(){this.updateScore(this.players.p2, 0);}, this);
         this.physics.arcade.overlap(this.players.p2.projectiles, this.players.p1.sprite, this.damage, function(){this.updateScore(this.players.p1, 0);}, this);
+        this.physics.arcade.overlap(this.players.p1.projectiles, this.wallGroup, this.destroyProj, null, this);
+        this.physics.arcade.overlap(this.players.p2.projectiles, this.wallGroup, this.destroyProj, null, this);
 
         for (player in this.players) {
             if(player.isMoving) this.depthGroup.sort('y', Phaser.Group.SORT_ASCENDING);

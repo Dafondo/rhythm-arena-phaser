@@ -14,18 +14,7 @@ RhythmArena.ChooseMap.prototype = {
     },
     maps: [
         {
-            map: [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            ],
+            map: mapList[0],
             callback: function() {
                 this.selectNext(0);
                 this.choices.mapChoice = 0;
@@ -33,22 +22,35 @@ RhythmArena.ChooseMap.prototype = {
             }
         },
         {
-            map: [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
-                [1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
-                [1, 1, 0, 1, 1, 0, 0, 0, 1, 1],
-                [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
-                [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
-                [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            ],
+            map: mapList[1],
             callback: function() {
                 this.selectNext(1);
                 this.choices.mapChoice = 1;
                 this.showPreview(1);
+            }
+        },
+        {
+            map: mapList[2],
+            callback: function() {
+                this.selectNext(2);
+                this.choices.mapChoice = 2;
+                this.showPreview(2);
+            }
+        },
+        {
+            map: mapList[3],
+            callback: function() {
+                this.selectNext(3);
+                this.choices.mapChoice = 3;
+                this.showPreview(3);
+            }
+        },
+        {
+            map: mapList[4],
+            callback: function() {
+                this.selectNext(4);
+                this.choices.mapChoice = 4;
+                this.showPreview(4);
             }
         }
     ],
